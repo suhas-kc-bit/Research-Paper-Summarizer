@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Research Paper Summarizer</title>
+</head>
+<body>
+    <h2>Upload Research Paper (PDF)</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="pdf" accept="application/pdf" required>
+        <button type="submit">Summarize</button>
+    </form>
+
+    {% if summary %}
+        <h3>Summary:</h3>
+        <p>{{ summary }}</p>
+    {% endif %}
+</body>
+</html>
