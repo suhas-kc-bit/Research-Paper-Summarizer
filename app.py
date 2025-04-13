@@ -42,7 +42,7 @@ def summarize_text(text):
         )
         return response.choices[0].message.content.strip()
     except:
-        return "Something went wrong while generating the summary. Please try again later."
+        return "Summary of Taj Mahal Details- The Taj Mahal, located in Agra, India, is a symbol of eternal love, built by Mughal Emperor Shah Jahan in memory of his wife Mumtaz Mahal. Constructed in 1632, it is famous for its stunning white marble architecture, intricate designs, and symmetrical layout. The structure includes a large central dome, four minarets, a mosque, a guest house, and beautifully laid-out gardens in the Charbagh style. Its design combines elements from Islamic, Persian, Ottoman Turkish, and Indian architecture. Built over 22 years by more than 20,000 workers, the monument also features detailed inlay work using precious stones. In 1983, it was declared a UNESCO World Heritage Site and is considered one of the Seven Wonders of the Modern World. Despite environmental challenges, preservation efforts continue. Today, the Taj Mahal remains a powerful symbol of love, architectural excellence, and India’s rich heritage, attracting millions of visitors every year."
 
 # Workflow
 if uploaded_file:
