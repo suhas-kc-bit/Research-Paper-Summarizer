@@ -1,24 +1,19 @@
 import os
 import fitz  # PyMuPDF
 import openai
-from flask import Flask, render_template, request
-from werkzeug.utils import secure_filename
+import streamlit as st
 from dotenv import load_dotenv
 
 # Load API key
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+st.title("📄 Research Paper Summarizer")
 
-# Create upload folder if not exists
-if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    os.makedirs(app.config['UPLOAD_FOLDER'])
+uploaded_file = st.file_uploader("Upload a Research Paper (PDF)", type="pdf")
 
-def extract_text_from_pdf(pdf_path):
-    doc = fitz.open(pdf_path)
+def extract_text_from_pdf(file):
+    doc = fitz.open(stream=file.read(), filetype="pdf")
     text = ""
     for page in doc:
         text += page.get_text()
@@ -37,25 +32,9 @@ def summarize_text(text):
     except Exception as e:
         return f"Error: {str(e)}"
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    summary = None
-    if request.method == "POST":
-        file = request.files.get("pdf")
-        if not file or file.filename == "":
-            return "Please upload a valid PDF file."
-        if not file.filename.endswith(".pdf"):
-            return "Only PDF files are allowed."
-        
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(filepath)
-
-        extracted_text = extract_text_from_pdf(filepath)
-        summary = summarize_text(extracted_text)
-        os.remove(filepath)
-
-    return render_template("index.html", summary=summary)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if uploaded_file:
+    with st.spinner("Extracting and summarizing..."):
+        text = extract_text_from_pdf(uploaded_file)
+        summary = summarize_text(text)
+        st.subheader("Summary")
+        st.write(summary)
